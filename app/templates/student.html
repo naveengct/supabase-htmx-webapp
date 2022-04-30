@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>App</title>
+    <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+    <style>
+        body{
+            padding: 20px;
+        }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        tr.htmx-swapping td {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+        td, th {
+            border: 1px solid #383737;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Student Request Form</h1>
+    {% if  message == "Your data got uploaded" %}
+    <p style="color: green;">{{message}}</p>
+    {% else %}
+    <div class="container-sm" >
+    <form action ="/student/" method="POST" >
+    
+        {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputName">Name</label>
+                <input type="text" class="form-control" name="inputName" placeholder="Name" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputtele">Telegram Id</label>
+                <input  hx-post= '/compute/' hx-target="#isTele" hx-swap="innerhtml" type="text" class="form-control" name="inputtele" placeholder="Telegram Id" required>
+
+                <a id="isTele"></a>
+              </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputCollege">Roll Number</label>
+                    <input type="text" class="form-control" name="inputRollNo" placeholder="Roll Number" required>
+                </div>
+        
+                <div class="form-group col-md-8">
+                    <label for="inputCollege">College</label>
+                    <input type="text" class="form-control" name="inputCollege" placeholder="College Name" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                <label for="inputAddress">Address</label>
+                <input type="text" class="form-control" name="inputAddress" placeholder="1234 Main St" required>
+                </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputPhone">Phone</label>
+                <input type="phone" class="form-control" name="inputPhone" placeholder=9597443066 required>
+              </div>
+             
+              <div class="form-group col-md-6">
+                <label for="inputEmail">E-Mail</label>
+                <input type="mail" class="form-control" name="inputEmail" placeholder="abc@gmail.com" required>
+              </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="Aadhar">Aadhar</label>
+                    <input hx-encoding='multipart/form-data' hx-post= '/upload-file/' type="file" class="form-control-file" name="aadhar" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Income">Income Certificate</label>
+                    <input  hx-encoding='multipart/form-data' hx-post= '/upload-file/' type="file" class="form-control-file" name="income" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+    {% endif %}
+</body>
+<br>
+<a href="/student/" style="padding-right: 10px;">Student Request</a>
+    <a href="/admin/" style="padding-right: 10px;">Admin Approval</a>
+    <a href="/">Data Board</a>
+
+</html>
+

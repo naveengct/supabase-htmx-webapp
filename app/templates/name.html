@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    <title>App</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+    <style>
+        body{
+            padding: 20px;
+        }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        tr.htmx-swapping td {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+        td, th {
+            border: 1px solid #383737;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        .form-popup {
+        display: none;
+ 
+        border: 3px solid #f1f1f1;
+      }
+      
+    </style>
+</head>
+<body>
+<div class="row" id="tabMain">
+    <h1>Test Page</h1><br>
+    <div class="form-group">
+    <label for="inputId">Telegram Id</label><br>
+    <input  hx-get="/name-compute/" hx-target="#dis-alt" hx-swap="innerhtml"   class="form-control" name="inputtele" style= "width:300px" >
+    <a id="dis-alt"></a>
+    <br><br>
+    </div>
+    <div class="col-md-8">
+        <table class="table ">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>College</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody >
+                {%for dt in data.data%}
+                <tr >
+                    <td>{{dt.name}}</td>
+                    <td>{{dt.college}}</td>
+                    <td>
+                    <button hx-get="/name-edit/{{dt.id}}"   hx-target="#th" hx-swap="innerhtml"  class="btn btn-primary">Edit</button>
+                    </td>
+                    <td> <button hx-get="/name-delete/{{dt.id}}"   hx-target="#tabMain" hx-swap="innerhtml"  class="btn btn-danger">Delete</button> </td>
+
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <div id="th"></div>
+    </div>
+</div>
+  </body>

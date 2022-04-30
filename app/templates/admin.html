@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>App</title>
+    <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.5.0"></script>
+    <style>
+        body{
+            padding: 20px;
+        }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        tr.htmx-swapping td {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+        td, th {
+            border: 1px solid #383737;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Admin Approval Form</h1>
+    <p style="color: green;">{{message}}</p>
+    {% if  flag == "False" %}
+    <form action ="/admin/" method="POST" >
+        <div class="row">
+        <div class="form-group col-md-4">
+            <label for="inputId">Student Id</label>
+            <input  hx-post="/compute/" hx-target="#dis-alt" hx-swap="outerhtml" id="dis"   type="number" class="form-control" name="inputStud" >
+            <a id="dis-alt"></a>
+        </div>
+    </div>
+     <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% else %}
+    <form action ="/admin/" method="POST" >
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputId">Id</label>
+                        <input type="number" class="form-control" name="inputId" value="{{data.id}}" readonly>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="inputName">Name</label>
+                        <input type="text" class="form-control" name="inputName" value="{{data.name}}" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputtele">Telegram Id</label>
+                        <input type="text" class="form-control" name="inputtele" value="{{data.telegram_id}}"readonly>
+                    </div>
+                
+                    <div class="form-group col-md-6">
+                        <label for="inputCollege">Roll Number</label>
+                        <input type="text" class="form-control" name="inputRollNo" value="{{data.roll_number}}" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+            
+                    <div class="form-group col-md-6">
+                        <label for="inputPhone">Phone</label>
+                        <input type="phone" class="form-control" name="inputPhone" value="{{data.phone}}" readonly>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail">E-Mail</label>
+                        <input type="mail" class="form-control" name="inputEmail" value="{{data.email}}" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputCollege">College</label>
+                        <input type="text" class="form-control" name="inputCollege" value="{{data.college}}" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                    <label for="inputAddress">Address</label>
+                    <input type="text" class="form-control" name="inputAddress" value="{{data.address}}" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="Aadhar">Aadhar</label> <br>
+                        
+                        <a href="/media/{{data.aadhar_url}}"> File</a>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="Income">Income Certificate</label> <br>
+                        
+                        <a href="/media/{{data.income_certificate_url}}"> File</a>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                    <p style="color: green;" id="assetVal"> Total Asset Left:-  {{asset_total}} </p>
+                    <form action ="/admin/" method="POST" >
+                        {% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <label for="inputAsset">Asset Amount</label>
+                            <input hx-post= '/compute/' hx-target="#assetVal" hx-swap="innerhtml" type="text" class="form-control" name="inputAsset" >
+
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="inputInfo">Asset Info</label>
+                            <textarea class="form-control" name="inputInfo" ></textarea>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="inputReason">Reamarks</label>
+                            <textarea class="form-control" name="inputReason" ></textarea>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="inputdate">Approval Date</label>
+                            <input type="date" class="form-control" name="inputDate" >
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="checkbox" id="approve" name="decision" value="Approved">
+                                    <label for="approve">Approve</label>
+                                </div>
+                                
+                           </div>
+                        </div>
+                        <input type="hidden" name="student_id" value="{{data.id}}">
+
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                    </form>
+            </div>
+        </div>
+
+           
+    {% endif %}
+    <br>
+    <a href="/student/" style="padding-right: 10px;">Student Request</a>
+    <a href="/admin/" style="padding-right: 10px;">Admin Approval</a>
+    <a href="/">Data Board</a>
+    
+</body>
+
+</html>
+
